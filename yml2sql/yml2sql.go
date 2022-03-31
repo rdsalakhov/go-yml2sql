@@ -27,12 +27,17 @@ var (
 func CreateStatementByFile(file string) string {
 	tableName := getTableName(file)
 	m := createMapData(file)
-	schema, values := schemaStrings(m)
+	var statements []string
+	for _, v := range m {
+		rowMap := []map[string]interface{}{v}
+		schema, values := schemaStrings(rowMap)
+		statements = append(statements, fmt.Sprintf("INSERT INTO\n  `%s`(%s)\nVALUES\n  %s; \n",
+			tableName,
+			schema,
+			values))
+	}
 
-	return fmt.Sprintf("INSERT INTO\n  `%s`(%s)\nVALUES\n  %s; \n",
-		tableName,
-		schema,
-		values)
+	return strings.Join(statements, "")
 }
 
 // SetPlural set plural flag
