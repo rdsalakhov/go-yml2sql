@@ -3,8 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-
-	"github.com/evalphobia/go-yml2sql/yml2sql"
+	"go-yml2sql/yml2sql"
 )
 
 var (

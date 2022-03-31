@@ -2,6 +2,7 @@ package yml2sql
 
 import (
 	"fmt"
+	"github.com/araddon/dateparse"
 	"io/ioutil"
 	"path/filepath"
 	"sort"
@@ -136,6 +137,7 @@ func toString(value interface{}) string {
 		if isNullString(t) {
 			return "NULL"
 		}
+		t = convertToDateIfPossible(t)
 		return "'" + t + "'"
 	case int:
 		return fmt.Sprint(t)
@@ -161,4 +163,13 @@ func isNullString(v string) bool {
 		return true
 	}
 	return false
+}
+
+func convertToDateIfPossible(v string) string {
+	t, err := dateparse.ParseAny(v)
+	if err == nil {
+		return t.Format("2006-01-02 15:04:05")
+	} else {
+		return v
+	}
 }
